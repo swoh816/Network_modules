@@ -1,0 +1,65 @@
+15/04/2014: My mistake of duplicating Boguna model
+
+I normalized probability, which shouldn't happen. Inverse_difference itself is already a probability of edge connection. Probability of edge connection does not need to be normalized by the number of nodes. (e.g., think about the case when N=1000, and p=0.003(z=3). Probability is not normalized by the number of nodes (0.003*1000 != 1), but it is normalized by the mean degree (0.003*1000 = 3))
+
+	<before>
+	sum_inverse_differences = sum(sum(inverse_differences))/2
+
+	for i in range(n):
+		for j in range(i+1, n): #combination.2
+			if inverse_differences[i][j]/sum_inverse_differences > rd.random():
+				G.add_edge(i, j)
+				
+	<after>
+	for i in range(n):
+		for j in range(i+1, n): #combination.2
+			if inverse_differences[i][j] > rd.random():
+				G.add_edge(i, j)
+
+
+15/04/2014: Changed the names of variables
+
+inverse_differences -> boguna_probability
+boguna_differences -> boguna_numerator
+
+
+
+
+15/04/2014: Moved all graph generating part under the condition:
+	if max(nodal_attri) > 0:
+	
+*reason: if max(nodal_attri) = 0, then
+char_deg_leng = (z*homo_fact*math.sin(math.pi/homo_fact))/(math.pi*2.0*n/max(nodal_attri))
+goes to 0, making
+boguna_numerator[i][j] = 1+((char_deg_leng**-1)*abs(nodal_attri[i]-nodal_attri[j]))**homo_fact
+infinity.
+
+When do we have the case where max(nodal_attri) = 0?
+-> when we make a phase diagram. When we scan from 0 <= max(nodal_attri) < given_max.
+
+By putting 	if max(nodal_attri) > 0: , we make a completely disconnected graph if max(nodal_attri)=0, which is sensible because people without any characteristic won't form any edges actively. (like, 'things' are used by human being, they don't make any networks by themselves.)
+
+
+
+
+
+16/04/2014: When calculating boguna_probability, according to Eqn. (2) in the literature, the chracteristic length scale is in denomenator, which goes to infinity when <k>->0, and occur error.
+
+(Python error note)
+boguna_numerator[i][j] = 1+((char_deg_leng**-1)*abs(nodal_attri[i]-nodal_attri[j]))**homo_fact
+ZeroDivisionError: 0.0 cannot be raised to a negative power
+
+So, put characteristic length scale (b_n in the literature) to the numerator part, not in the denominator part. 
+
+		<before>
+		for i in range(n):
+			for j in range(n):
+				boguna_numerator[i][j] = 1+((char_deg_leng**-1)*abs(nodal_attri[i]-nodal_attri[j]))**homo_fact
+		boguna_probability = 1. / boguna_numerator
+		
+		
+		<after>
+		for i in range(n):
+			for j in range(n):
+				boguna_numerator[i][j] = char_deg_leng**homo_fact+(abs(nodal_attri[i]-nodal_attri[j]))**homo_fact
+		boguna_probability = char_deg_leng**homo_fact / boguna_numerator

@@ -1,0 +1,65 @@
+15/04/2014: Change of normalization
+
+Original code for normalizing probability is wrong.
+
+<wrong part>
+sum_inverse_differences = sum(sum(inverse_differences))/2
+avg_inverse_differences = sum_inverse_differences/float(n)
+
+for i in range(n):
+	for j in range(n)[i:]: #combination.2
+		if p*inverse_differences[i][j]/avg_inverse_differences > rd.random():
+			G.add_edge(i, j)
+
+* The reason it is wrong: if you divide each elements of matrix with AVERAGE of sum of all elements, then the sum of all elements in the the new matrix is not equal to 1, but it equals to the number of elements. Therefore, you shouldn't divide each elements with their average. you should just divide them with their sum. THAT IS THE NORMALIZATION.
+
+
+<corrected>
+sum_inverse_differences = sum(sum(inverse_differences))/2
+
+for i in range(n):
+	for j in range(n)[i:]: #combination.2
+		if p*inverse_differences[i][j]/sum_inverse_differences > rd.random():
+			G.add_edge(i, j)
+
+
+
+
+
+15/04/2014: Individual homophily / global homophily
+
+Global homophily - which is the original one - normalizes the probability of edge connection by the all of nodal differences (difference between all nodes' nodal attributes, e.g., threshold) in the network. 
+
+However, one can also think, that from individual perspective, that a node's probability of edge connection is a very individual-based thing. In short, the nodal difference is normalized by nodal difference between the node and other nodes.
+
+<Global homophily (glob_homo_graph)>
+sum_inverse_differences = sum(sum(inverse_differences))/2   => calculates the sum of all nodal differences
+for i in range(n):
+	for j in range(n)[i:]: #combination.2
+		if p*inverse_differences[i][j]/sum_inverse_differences > rd.random():
+			G.add_edge(i, j)
+
+
+<Individual homophily (indi_homo_graph)>
+for i in range(n):
+	indi_norm = sum(inverse_differences[i])
+	for j in range(n): #combination.2
+		if p*inverse_differences[i][j]/indi_norm > rd.random():
+			G.add_edge(i, j)
+
+
+
+
+15/04/2014: Important numpy characteristic
+
+A = np.random.random((5, 5))
+sum(A)
+=> sum elements through 'column'.
+sum(A[0])
+=> sum elements through 'row'.
+
+A = np.array(A).tolist()
+sum(A)
+=> does not work.
+sum(A[0])
+=> sum elements through 'row'.

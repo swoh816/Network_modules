@@ -1,0 +1,27 @@
+In the temporal network, a node get activated not by the fraction of activated nodes that were contacted before, but by the accumulation of positive dose d_i(t). So if d_i(t) is bigger than the node's dose threshold, then it'll get activated.
+However, the dose gets thinner by itself, if the node loses contact with other nodes for a long time. Therefore, once a node is contacted by a node that is activated, if its d_i(t) was not big enough to activate the node, then the node will keep d_i(t) but will decrease by time (timer starts to tick), which means it'll recover naturally. Therefore, in order for a node to get activated,
+
+i) A node should get infected by a node that has higher dose than the node's dose threshold
+ii) A node should get in touch with more than one node within the timer runs out, and its dose threshold should get exceeded by the total accumulation of dose. If not, then it will get back to normal (asymtotically).
+
+You can draw a phase diagram of (threshold mean - timer mean). Through the phase diagram, you can know which one matter more for cascade, between 'low mean' or 'high timer mean'.
+low thr mean with high timer mean: people who are ill tempered - easy to get excited, and likes to keep that excited state. (like media? news makers. entertainers?)
+high thr mean with high timer mean: people who are not tempered, but remembers things for long time. (like Sang-Hoon)
+low thr mean with low timer mean: easy to get excited, but they need steady stimulus. (like general public)
+high thr mean with low timer mean: not easy to get excited, and also forgets things easily, so not easy to get excited in general. (like me.)
+
+Difference between this model and timer_watts (see netmod) is that the timer in timerwatts work as a timer for a node to get excited, while timer here works as a timer for cascade to lose effect.
+
+
+timer will get renewed everytime a node is contacted by an infected node.
+
+
+About the dose threshold, check:
+Universal Behavior in a Generalized Model of Contagion
+P. Dodds, and D. Watts.
+http://prl.aps.org/pdf/PRL/v92/i21/e218701
+
+
+
+
+In such a network, the HOMOPHILY OF TIME SEED FOR EDGE ACTIVATION will best describe the formation of network. In short, if there are two network generating model: 1. become neighbour of a node that has similar edge activation time, and 2. become neighbour of a node that has similar other nodal attributes (e.g., threshold). Then, a network generated through 1. would best mimic the real world network.

@@ -1,0 +1,10 @@
+def thr_stat_update(G, node_Phi):
+	neighbor_Phi = {}
+	for i in G.nodes():
+		neighbor_Phi[i] = [node_Phi[i]]
+			for j in G[i].keys():
+				if G.node[i] == G.node[j]:
+					neighbor_Phi[i].append(node_Phi[j])
+	for i in G.nodes():
+		node_Phi[i] = sum(neighbor_Phi[i])/(len(G[i])+1)
+

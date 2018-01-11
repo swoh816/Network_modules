@@ -1,0 +1,190 @@
+import random as rd
+import networkx as nx
+import numpy as np
+
+def newman_assortative_network_limit(G, number_of_Community, assortativity, nodal_attribute, number_of_iterations, accuracy):
+	#### READTHIS #####
+	# Nodal attributes should be distributed randomly throughout the nodes.
+	# Example)
+	#nodes_list = G.nodes()
+	#rd.shuffle(nodes_list)
+	#number_of_nodes_with_homogeneous_timers = 0
+	#for i in nodes_list:
+	#    if number_of_nodes_with_homogeneous_timers < network_Size/number_of_Community:
+	#        G.node[i]['timer'] = 0
+	#    else:
+	#        G.node[i]['timer'] = 8
+	#    number_of_nodes_with_homogeneous_timers += 1
+
+	assortative_edge_fraction = (assortativity - (assortativity-1)/number_of_Community)/number_of_Community
+	disassortative_edge_fraction = (1/number_of_Community - assortative_edge_fraction)/(number_of_Community-1)
+	while 1:
+		list_of_assortativity = []
+		for i in xrange(number_of_iterations):
+		# Rewire until you find two distinctive edges that have no overlapping node
+			while 1:
+				random_edge_1 = G.edges()[rd.randint(0,G.size()-1)]
+				random_edge_2 = G.edges()[rd.randint(0,G.size()-1)]
+				if random_edge_1[0] not in G[random_edge_2[0]] and random_edge_1[0] not in G[random_edge_2[1]]:
+					if random_edge_1[1] not in G[random_edge_2[0]] and random_edge_1[1] not in G[random_edge_2[1]]:
+						break
+
+			timer_random_edge_1_node_1 = G.node[random_edge_1[0]]['timer']
+			timer_random_edge_1_node_2 = G.node[random_edge_1[1]]['timer']
+			timer_random_edge_2_node_1 = G.node[random_edge_2[0]]['timer']
+			timer_random_edge_2_node_2 = G.node[random_edge_2[1]]['timer']
+		
+		
+			if timer_random_edge_1_node_1 == timer_random_edge_1_node_2:
+				frac_1_1_to_1_2 = assortative_edge_fraction
+			else:
+				frac_1_1_to_1_2 = disassortative_edge_fraction            
+			if timer_random_edge_1_node_1 == timer_random_edge_2_node_1:
+				frac_1_1_to_2_1 = assortative_edge_fraction
+			else:
+				frac_1_1_to_2_1 = disassortative_edge_fraction
+			if timer_random_edge_2_node_2 == timer_random_edge_2_node_1:
+				frac_2_2_to_2_1 = assortative_edge_fraction
+			else:
+				frac_2_2_to_2_1 = disassortative_edge_fraction
+			if timer_random_edge_2_node_2 == timer_random_edge_1_node_2:
+				frac_2_2_to_1_2 = assortative_edge_fraction
+			else:
+				frac_2_2_to_1_2 = disassortative_edge_fraction
+
+			    
+			if rd.random() < (frac_1_1_to_2_1*frac_2_2_to_1_2)/(frac_1_1_to_1_2*frac_2_2_to_2_1):
+				G.remove_edges_from([random_edge_1, random_edge_2])
+				G.add_edges_from([(random_edge_1[0], random_edge_2[0]), (random_edge_1[1],random_edge_2[1])])
+		
+			list_of_assortativity.append(nx.attribute_assortativity_coefficient(G,'timer'))
+		    
+		# Check until assortativity converges
+		if abs(np.mean(list_of_assortativity) - assortativity) < accuracy:
+			break
+
+
+
+
+def kristina_assortative_network(G, assortativity, nodal_attribute):
+	past_assortativity = nx.attribute_assortativity_coefficient(G,nodal_attribute)
+	while 1:
+		while 1:
+			random_edge_1 = G.edges()[rd.randint(0,G.size()-1)]
+			random_edge_2 = G.edges()[rd.randint(0,G.size()-1)]
+			if random_edge_1[0] not in G[random_edge_2[0]] and random_edge_1[0] not in G[random_edge_2[1]]:
+				if random_edge_1[1] not in G[random_edge_2[0]] and random_edge_1[1] not in G[random_edge_2[1]]:
+					break
+		previous_G = G.copy()
+		
+		G.remove_edges_from([random_edge_1, random_edge_2])
+		G.add_edges_from([(random_edge_1[0], random_edge_2[0]), (random_edge_1[1],random_edge_2[1])])
+		if assortativity > 0:
+			if nx.attribute_assortativity_coefficient(G,nodal_attribute) > past_assortativity:
+				past_assortativity = nx.attribute_assortativity_coefficient(G,nodal_attribute)
+				if past_assortativity >= assortativity:
+					return G
+					break
+			else:
+				G = previous_G
+		else:
+			if nx.attribute_assortativity_coefficient(G,nodal_attribute) < past_assortativity:
+				past_assortativity = nx.attribute_assortativity_coefficient(G,nodal_attribute)
+				if past_assortativity <= assortativity:
+					return G
+					break
+			else:
+				G = previous_G
+
+
+
+
+def kristina_assortative_network_2(G, assortativity, nodal_attribute, accuracy):
+    network_assortativity_past = nx.attribute_assortativity_coefficient(G,nodal_attribute)
+    while 1:
+        while 1:
+            random_edge_1 = G.edges()[rd.randint(0,G.size()-1)]
+            random_edge_2 = G.edges()[rd.randint(0,G.size()-1)]
+            if random_edge_1[0] not in G[random_edge_2[0]] and random_edge_1[0] not in G[random_edge_2[1]]:
+                if random_edge_1[1] not in G[random_edge_2[0]] and random_edge_1[1] not in G[random_edge_2[1]]:
+                    break
+
+        G.remove_edges_from([random_edge_1, random_edge_2])
+        G.add_edges_from([(random_edge_1[0], random_edge_2[0]), (random_edge_1[1],random_edge_2[1])])
+
+        network_assortativity_new = nx.attribute_assortativity_coefficient(G,nodal_attribute)
+        if assortativity >= 0:
+            if (1 + accuracy)*assortativity > network_assortativity_new >= (1 - accuracy)*assortativity:
+                break
+            elif network_assortativity_new < (1 - accuracy)*assortativity:
+                if network_assortativity_new > network_assortativity_past:
+                    network_assortativity_past = network_assortativity_new
+                    continue
+                else:
+                    G.remove_edges_from([(random_edge_1[0], random_edge_2[0]), (random_edge_1[1],random_edge_2[1])])
+                    G.add_edges_from([random_edge_1, random_edge_2])                    
+            elif network_assortativity_new > (1 + accuracy)*assortativity:
+                if network_assortativity_new < network_assortativity_past:
+                    network_assortativity_past = network_assortativity_new
+                    continue
+                else:
+                    G.remove_edges_from([(random_edge_1[0], random_edge_2[0]), (random_edge_1[1],random_edge_2[1])])
+                    G.add_edges_from([random_edge_1, random_edge_2])
+            
+        if assortativity < 0:
+            if (1 + accuracy)*assortativity <= network_assortativity_new < (1 - accuracy)*assortativity:
+                break
+            elif network_assortativity_new > (1 - accuracy)*assortativity:
+                if network_assortativity_new < network_assortativity_past:
+                    network_assortativity_past = network_assortativity_new
+                    continue
+                else:
+                    G.remove_edges_from([(random_edge_1[0], random_edge_2[0]), (random_edge_1[1],random_edge_2[1])])
+                    G.add_edges_from([random_edge_1, random_edge_2])                    
+            elif network_assortativity_new < (1 + accuracy)*assortativity:
+                if network_assortativity_new > network_assortativity_past:
+                    network_assortativity_past = network_assortativity_new
+                    continue
+                else:
+                    G.remove_edges_from([(random_edge_1[0], random_edge_2[0]), (random_edge_1[1],random_edge_2[1])])
+                    G.add_edges_from([random_edge_1, random_edge_2])
+
+
+
+#~ def assortative_network(G, assortativity, nodal_attribute):
+	#~ while 1:
+		#~ while 1:
+			#~ random_edge_1 = G.edges()[rd.randint(0,G.size()-1)]
+			#~ random_edge_2 = G.edges()[rd.randint(0,G.size()-1)]
+			#~ if random_edge_1[0] not in G[random_edge_2[0]] and random_edge_1[0] not in G[random_edge_2[1]]:
+				#~ if random_edge_1[1] not in G[random_edge_2[0]] and random_edge_1[1] not in G[random_edge_2[1]]:
+					#~ break
+		#~ 
+		#~ timer_random_edge_1_node_1 = G.node[random_edge_1[0]][nodal_attribute]
+		#~ timer_random_edge_1_node_2 = G.node[random_edge_1[1]][nodal_attribute]
+		#~ timer_random_edge_2_node_1 = G.node[random_edge_2[0]][nodal_attribute]
+		#~ timer_random_edge_2_node_2 = G.node[random_edge_2[1]][nodal_attribute]
+		#~ 
+		#~ if timer_random_edge_1_node_1 == timer_random_edge_1_node_2:
+			#~ frac_1_1_to_1_2 = assortativity
+		#~ else:
+			#~ frac_1_1_to_1_2 = 1 - assortativity
+		#~ if timer_random_edge_1_node_1 == timer_random_edge_2_node_1:
+			#~ frac_1_1_to_2_1 = assortativity
+		#~ else:
+			#~ frac_1_1_to_2_1 = 1 - assortativity
+		#~ if timer_random_edge_2_node_2 == timer_random_edge_2_node_1:
+			#~ frac_2_2_to_2_1 = assortativity
+		#~ else:
+			#~ frac_2_2_to_2_1 = 1 - assortativity
+		#~ if timer_random_edge_2_node_2 == timer_random_edge_1_node_2:
+			#~ frac_2_2_to_1_2 = assortativity
+		#~ else:
+			#~ frac_2_2_to_1_2 = 1 - assortativity
+		#~ 
+		#~ if rd.random() < (frac_1_1_to_2_1*frac_2_2_to_1_2)/(frac_1_1_to_1_2*frac_2_2_to_2_1):
+			#~ G.remove_edges_from([random_edge_1, random_edge_2])
+			#~ G.add_edges_from([(random_edge_1[0], random_edge_2[0]), (random_edge_1[1],random_edge_2[1])])
+		#~ 
+		#~ if nx.attribute_assortativity_coefficient(G,nodal_attribute) >= assortativity:
+			#~ break

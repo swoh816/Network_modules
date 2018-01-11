@@ -1,0 +1,5 @@
+Nodes with the similar time stamps (in the temporal network) form edges with higher probability.
+This is to mimic the IMPORTANCE OF TIMING in human relationship.
+
+Or like an adaptive network, where edges keep changing, initially start with erdos renyi network (random edge formation which mimics initial meeting between many people), and then develops into a homophilous network by rewiring edges based on similar time stamps.
+=> Adaptive temporal network is a temporal network that is adaptive. For example, a temporal network rewires their edges (adaptive) by their similarity in time stamp.

@@ -1,0 +1,11 @@
+If you're interested in how the dynamics of a network changes, then it is worth observing how the people in the real network are influenced by their categorical network, which can be caricatured by HYPER GRAPH H=(X, E), where X is the set of nodes and E 
+Categorical network means the network of category. For example, if the categorical network is occupation, then the nodes in the categorical network would be: students, professors, researchers, architectures, etc. If it is emotion, then the nodes would be: happy, sad, upset, calm, etc.
+
+In my case, I can make a hypergraph of nodes with similar threshold / timer seed. So, let G1 be the real network, which shows the real interaction between entities. Then, by the underlying categorical network (based on homophily, categorical groups are devided by similar threshold value or similar timer value), the change of network occurs (adaptive network process).
+
+
+
+check:
+http://en.wikipedia.org/wiki/Hypergraph
+http://en.wikipedia.org/wiki/Sperner%27s_theorem
+http://en.wikipedia.org/wiki/Cardinality

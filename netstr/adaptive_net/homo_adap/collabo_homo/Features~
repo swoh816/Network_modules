@@ -1,0 +1,20 @@
+We can think about the situation:
+ If two people are homophily in 'taste' of something, it means they have similar taste, so that they may want to get the same thing, by:
+
+ i) compete with each other
+ ii) collaborate with each other
+
+=> i) can happen when:
+ i.1) there is not enough resources (e.g., two friends love one girl)
+
+, and ii) can happen when:
+ ii.1) there are plenty of resources, or
+ ii.2) there is not enough resources, but there exists strong third party who also wants to get the same resource, so that I can't get the resource unless I collaborate with my friend.
+ ii.3) there is not enough resources, but there exists strong third party 'group' which is composed of people with the same taste, so that I can't beat them without forming 'my group' by collaboration.
+
+
+It would be cool if I can obtain above results not artificially by making the algorithm to realize it, but naturally by making a very simple rule for individual's action, and changing the environmental condition (network structure, total resource).
+
+
+
+This is inspired by the idea I developed on 14th of June, 2013. (Check complex ideas/

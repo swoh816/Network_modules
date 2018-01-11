@@ -1,0 +1,298 @@
+05/04/2017: Make directed version of timer model
+ The main difference between the WTM with a timer on directed and undirected graph is which nodes to take into account when calculating threshold; should we take into account all neighbours (undirected) or only the predecessors (directed)?
+ Networkx has separate functions for calculating either predecessors or successors.
+G = nx.DiGraph()
+G.successors(1)
+G.predecessors(1)
+So I need to change G[node] to either G.successor(node) or G.predecessors(node) depending on influence dynamics --- a node GETS INFLUENCED BY PREDECESSOR (in-going neighbour), and INFLUENCE SUCCESSOR (out-going neighbour).
+
+<undirected version>
+for i in unadopted_nodes:
+	sum_neighbor_state[i] = 0
+	for j in G[i].keys():
+		sum_neighbor_state[i] = sum_neighbor_state[i] + G.node[j]['state']
+for i in unadopted_nodes: 
+	if len(G[i])>0:
+
+
+<directed version>
+for i in unadopted_nodes:
+	sum_neighbor_state[i] = 0
+	for j in G.predecessors(i):
+		sum_neighbor_state[i] = sum_neighbor_state[i] + G.node[j]['state']
+for i in unadopted_nodes: 
+	if len(G.predecessors(i))>0:
+
+
+
+
+05/04/2017: Make an absolute-threshold version.
+<before>
+elif frac_or_abs == 'abs':
+	for i in G.nodes():
+		sum_neighbor_state[i] = 0
+		for j in G[i].keys():
+			sum_neighbor_state[i] = sum_neighbor_state[i] + G.node[j]
+	for i in G.nodes():
+		if len(G[i])>0:
+			if sum_neighbor_state[i]>=node_Phi[i]:
+				if node_time[i] <= 0:
+					G.node[i] = 1
+				elif node_time[i] > 0:
+					node_time[i] = node_time[i] - 1
+
+		else:
+			G.node[i] = G.node[i]
+
+<after>
+elif frac_or_abs == 'abs':
+	for i in unadopted_nodes:
+		sum_neighbor_state[i] = 0
+		for j in G[i].keys():
+			sum_neighbor_state[i] = sum_neighbor_state[i] + G.node[j]['state']
+	for i in unadopted_nodes: 
+		if len(G[i])>0:
+			if float(sum_neighbor_state[i]) >= G.node[i]['threshold']:
+				if G.node[i]['timer'] <= 0:
+					G.node[i]['state'] = 1
+					updated_nodes.append(i)
+				elif G.node[i]['timer'] > 0:
+					G.node[i]['timer'] = G.node[i]['timer'] - 1
+					ticking_nodes.append(i)
+		else:
+			G.node[i]['state'] = G.node[i]['state']
+
+
+13/01/2017: I have changed timer_model.py to a great degree, especially 
+<timer_model_OBSOLETE>
+timer model only calculates which node in a network should get triggered, or should adopt. It scan through all nodes (which is improved later to scan only unadopted nodes), and simply calculate which node should adopt. The problem of this way of calculating is when it is obvious that there is no nodes that adopts at a current time step. For example, if timers are homogeneous with timer $4$, and if adoption occurs at $T$, then we know that no node will adopt at all, until $T+4$.
+
+<timer_model.py>
+In order to skip the time steps when no node adopts, we should know (i) which nodes are ticking at the current time step, and (ii) which nodes are newly updated at the current time step. If no node is adopted at a current time step, then we can basically jump $p$ time steps, where $p$ is the smallest timer of the nodes whose timers are ticking at the current time step. Therefore, we changed the timer function to receive variable called "unadopted_nodes", which is the neighbours of the nodes that are adopted, and returns "updated_nodes" and "ticking_nodes", to determine how many time steps should we jump from the current time step.
+
+
+
+27/12/2016: Scan through nodes that are not scanned (basically the neighbours of newly adopted nodes).
+Because the WTM is monotone dynamics, you don't need to scan the node that has already been updated. Furthermore, since WTM spreads locally, unadopted nodes that are to be adopted in the following time step is the neighbours of nodes that are adopted at the current stage.
+
+<before>
+while 1:
+	timer_act.timer_thr_dyn(Gcc, 'frac')
+
+<after>
+unadopted_nodes = []
+for node in new_adoption_at_t[step]:
+    for neighbour in Gcc[node]:
+	if Gcc.node[neighbour]['state'] == 0:
+	    unadopted_nodes.append(neighbour)
+unadopted_nodes = list(set(unadopted_nodes))
+
+while 1:
+	new_adoption_at_t[step+1], new_tick_at_t[step] = timer_act.timer_thr_dyn(Gcc, unadopted_nodes, 'frac')
+
+
+
+
+where the function timer_act.py has changed such that:
+<before>
+def timer_thr_dyn(G, frac_or_abs, async_frac=None): # 0 < async_frac < 1: fraction, 1 < async_frac: absolute number of nodes are selected.
+	sum_neighbor_state = {}
+	size_of_net = len(G)
+	how_many_nodes_to_update = size_of_net # if async_frac in none, do synchronous update.
+		
+	if not async_frac is None:
+		if async_frac < 1:
+			how_many_nodes_to_update = int(round(len(G)*async_frac))
+		elif async_frac >= 1:
+			how_many_nodes_to_update = async_frac
+	
+	node_list = G.nodes()
+	rd.shuffle(node_list)
+	selection_of_nodes = node_list[:how_many_nodes_to_update]
+	
+	if frac_or_abs == 'frac': # fractional threshold model.
+		for i in selection_of_nodes:
+			sum_neighbor_state[i] = 0
+			for j in G[i].keys():
+				sum_neighbor_state[i] = sum_neighbor_state[i] + G.node[j]['state']
+		for i in selection_of_nodes:
+			if len(G[i])>0:
+				if float(sum_neighbor_state[i])/float(len(G[i])) >= G.node[i]['threshold']:
+					if G.node[i]['timer'] <= 0:
+						G.node[i]['state'] = 1
+					elif G.node[i]['timer'] > 0:
+						G.node[i]['timer'] = G.node[i]['timer'] - 1
+			else:
+				G.node[i]['state'] = G.node[i]['state']
+
+<after>
+def timer_thr_dyn(G, unadopted_nodes, frac_or_abs): # 0 < async_frac < 1: fraction, 1 < async_frac: absolute number of nodes are selected.
+	updated_nodes = []
+	ticking_nodes = []
+	
+	sum_neighbor_state = {}
+	rd.shuffle(unadopted_nodes)
+	
+	if frac_or_abs == 'frac': # fractional threshold model.
+		for i in unadopted_nodes:
+			sum_neighbor_state[i] = 0
+			for j in G[i].keys():
+				sum_neighbor_state[i] = sum_neighbor_state[i] + G.node[j]['state']
+                for i in unadopted_nodes: 
+			if len(G[i])>0:
+				if float(sum_neighbor_state[i])/float(len(G[i])) >= G.node[i]['threshold']:
+					if G.node[i]['timer'] <= 0:
+						G.node[i]['state'] = 1
+						updated_nodes.append(i)
+					elif G.node[i]['timer'] > 0:
+						G.node[i]['timer'] = G.node[i]['timer'] - 1
+						ticking_nodes.append(i)
+			else:
+				G.node[i]['state'] = G.node[i]['state']
+		return updated_nodes, ticking_nodes
+
+
+
+
+
+
+
+
+
+
+
+
+02/07/2015: Instead of deciding fractional / absolute threshold by the average size of thresholds, decide explicitly which mechanism I choose -- either 'frac' or 'abs'. The reason is because
+
+i) if I want to have every nodes to have fractional threshold 1, the old algorithm will run absolute threshold as the mean threshold is not less than 1.
+
+		<before>
+		def timer_thr_dyn(G, async_frac=None): # 0 < async_frac < 1: fraction, 1 < async_frac: absolute number of nodes are selected.
+			...
+			
+			if np.mean([G.node[i]['threshold'] for i in G])<1: # fractional threshold model.
+				...
+				
+			else:
+				...
+
+
+
+		<after>
+***		def timer_thr_dyn(G, frac_or_abs, async_frac=None): # 0 < async_frac < 1: fraction, 1 < async_frac: absolute number of nodes are selected.
+			...
+			
+***			if frac_or_abs == 'frac': # fractional threshold model.
+				...
+
+***			elif frac_or_abs == 'abs':
+				...
+
+
+
+25/04/2015: Threshold rule is to activate a node if its fraction of active neighbours is LARGER OR EQUAL to its threshold value, NOT STRICTLY LARGER than the threshold value.
+
+<before>
+if float(sum_neighbor_state[i])/float(len(G[i])) > G.node[i]['threshold']:
+
+<after>
+if float(sum_neighbor_state[i])/float(len(G[i])) >= G.node[i]['threshold']:
+
+
+
+25/04/2015: Change of variable name: total_neighbor_state --> sum_neighbor_state.
+
+
+
+05/03/2015: Changed code to enable ASYNCHRONOUS UPDATE.
+
+if async_frac is None, then just do synchronous updating. if it is smaller than 1, then update async_frac fraction of nodes at one time step. if async_frac is larger than 1, then update async_frac number of nodes at one time step.
+
+<before>
+def timer_thr_dyn(G):
+	total_neighbor_state = {}
+	if np.mean([G.node[i]['threshold'] for i in G])<1:
+		for i in G:
+			...
+		for i in G.nodes():
+			if len(G[i])>0:
+				...
+
+
+<After>
+def timer_thr_dyn(G, async_frac=None): # 0 < async_frac < 1: fraction, 1 < async_frac: absolute number of nodes are selected.
+	total_neighbor_state = {}
+	size_of_net = len(G)
+	how_many_nodes_to_update = size_of_net
+		
+	if not async_frac is None:
+		if async_frac < 1:
+			how_many_nodes_to_update = int(round(len(G)*async_frac))
+		elif async_frac >= 1:
+			how_many_nodes_to_update = async_frac
+	
+	node_list = G.nodes()
+	rd.shuffle(node_list)
+	selection_of_nodes = node_list[:how_many_nodes_to_update]
+	
+	if np.mean([G.node[i]['threshold'] for i in G])<1:
+		for i in selection_of_nodes:
+			...
+		for i in selection_of_nodes:
+			if len(G[i])>0:
+				...
+				
+				
+				
+				
+
+
+22/01/2015: Major change of the dynamical process: make use of the dictionary of G.node, as a dictionary of nodal attributes.
+
+
+	<before>
+	G.node[i] only represented state of a node, while its default format is actually a DICTIONARY, that can contain different kinds of nodal attribute.
+
+	def timer_thr_dyn(G, node_Phi, node_time):
+		total_neighbor_state = {}
+		if np.mean(node_Phi)<1:
+	#def frac_thr(G, node_Phi):
+			for i in G.nodes():
+				total_neighbor_state[i] = 0
+				for j in G[i].keys():
+					total_neighbor_state[i] = total_neighbor_state[i] + G.node[j]
+			for i in G.nodes():
+				if len(G[i])>0:
+					if float(total_neighbor_state[i])/float(len(G[i]))>node_Phi[i]:
+						if node_time[i] <= 0:
+							G.node[i] = 1
+						elif node_time[i] > 0:
+							node_time[i] = node_time[i] - 1
+				else:
+					G.node[i] = G.node[i]
+
+
+
+	<after>
+
+	def timer_thr_dyn(G):
+		total_neighbor_state = {}
+		if np.mean([G.node[i]['threshold'] for i in G])<1:
+	#def frac_thr(G, node_Phi):
+			for i in G:
+				total_neighbor_state[i] = 0
+				for j in G[i].keys():
+					total_neighbor_state[i] = total_neighbor_state[i] + G.node[j]['state']
+			for i in G.nodes():
+				if len(G[i])>0:
+					if float(total_neighbor_state[i])/float(len(G[i])) > G.node[i]['threshold']:
+						if G.node[i]['timer'] <= 0:
+							G.node[i]['state'] = 1
+						elif G.node[i]['timer'] > 0:
+							G.node[i]['timer'] = G.node[i]['timer'] - 1
+				else:
+					G.node[i]['state'] = G.node[i]['state']
+
+
+
+

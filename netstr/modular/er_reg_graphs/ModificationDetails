@@ -1,0 +1,26 @@
+24/11/2014: Because it's ER-PL graph, do not use degree_mixing_matrix which controls degree-degree correlation, use modular-modular correlation matrix.
+
+	<in two_reg.py file>
+	mix_mat = nx.degree_mixing_matrix(H)
+	mix_mat[k1, k2] = rat
+	mix_mat[k2, k1] = mix_mat[k1, k2]
+	mix_mat[k1, k1] -= rat
+	mix_mat[k2, k2] -= rat
+
+	...
+	
+		if (mix_mat[len(H[H1_edge_ele_1]), len(H[H2_edge_ele_1])] * mix_mat[len(H[H1_edge_ele_2]), len(H[H2_edge_ele_2])] ) / ( mix_mat[len(H[H1_edge_ele_1]), len(H[H1_edge_ele_2])] * mix_mat[len(H[H2_edge_ele_1]), len(H[H2_edge_ele_2])] ) > rd.random():
+
+
+
+	<in er_reg_graph.py file>
+	mix_mat = np.zeros((2, 2)) #make 2-by-2 mixing matrix
+	mix_mat[0, 0] = rat11 #G1-G1
+	mix_mat[0, 1] = rat12 #G1-G2
+	mix_mat[1, 0] = rat12 #G2-G1
+	mix_mat[1, 1] = rat22 #G2-G2
+	mix_mat = 1/sum(sum(mix_mat))*mix_mat
+	
+	...
+	
+		if (mix_mat[int(H1_edge_ele_1[1])-1, int(H2_edge_ele_1[1])-1] * mix_mat[int(H1_edge_ele_2[1])-1, int(H2_edge_ele_2[1])-1] ) / (mix_mat[int(H1_edge_ele_1[1])-1, int(H1_edge_ele_2[1])-1] * mix_mat[int(H2_edge_ele_1[1])-1, int(H2_edge_ele_2[1])-1])>rd.random():

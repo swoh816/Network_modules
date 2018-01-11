@@ -1,0 +1,7 @@
+20/01/2014:
+
+Threshold value of a node changes not only by the mean threshold value of neighbour nodes 'phi_mean', but also by the difference between its own threshold value and the mean value 'd=phi_node-phi_mean'. That difference 'd' works as the variance, and decides its threshold value at the next step, from the distribution:
+
+i) N(phi_mean, d)
+ii) N((d/2, d)
+iii) N(d/2, var_node) where 'var_node' is a characteristic variance value specifically given to the node, from a random distribution. In this case, a node's attribute is not onlt threshold but also variance (variance can be correspondent to the characteristic / temper of an individual, in the real life.)

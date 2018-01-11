@@ -1,0 +1,7 @@
+The SIR code is produced based on the instruction on SIR models of epidemics:
+http://www.tb.ethz.ch/education/learningmaterials/modelingcourse/level-1-modules/SIR.html
+http://www.tb.ethz.ch/content/dam/ethz/special-interest/usys/ibz/theoreticalbiology/education/learningmaterials/701-1424-00L/sir.pdf
+
+
+There are different versions of SIR models, such as SIR model with non-100 percent recovery rate:
+https://www.openabm.org/book/33102/133-sir-model-network

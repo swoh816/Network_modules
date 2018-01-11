@@ -1,0 +1,18 @@
+<Second order similarity>
+
+When a node connects to other nodes, the node consider not only the similarity between itself and other nodes but also WHETHER OTHER NODES ARE THE NEIGHBOURS OF MY NEIGHBOURS. In short, if there's person that you don't know, the connection probability between him and I depends not only on the similarity between two of us, but also whether there's any mutual friend between us.
+
+example)
+	A( = 0.1)
+
+C(= 0.6)-----B(= 0.5)-----D( = 0.55)
+
+
+B is connected to both C and D (2-star).
+
+i) in case A is connected to C:
+	connection prob. between B and A = 1/0.05
+ii) in case A is not connected to C:
+	connection prob. between B and A = f(1/0.05). For example, f(1/0.05)=SOC*1/0.05 where SOC is the sociablity constant of B. It defines B's general connectivity (sociablity).
+	if  SOC <=0 : B is not sociable at all.
+		SOC >> 0 : B is very sociable.

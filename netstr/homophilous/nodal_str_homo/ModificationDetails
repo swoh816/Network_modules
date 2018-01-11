@@ -1,0 +1,3 @@
+The model is built on indi_homo_graph (see simp_homo/indi_homo_graph).
+
+When people hang out, they not only care about 'similarity' of one person but also his popularity (PA model + nodal homophily model)

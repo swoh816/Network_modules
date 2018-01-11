@@ -1,0 +1,15 @@
+24/11/2014: change from x_max to size_of_net.
+=> the maximum degree of a network is naturally as big as the size of network minus one (N-1).
+
+	<before>
+	norm_const = float(size_of_net)/sum([var**(-power_law_exponent) for var in range(x_min, x_max+1)])
+	for i in range(x_min, x_max+1):
+		for j in range(int(round(norm_const*i**(-power_law_exponent)))):
+			degree_sequence.append(i)
+
+
+	<after>
+	norm_const = float(size_of_net)/sum([var**(-power_law_exponent) for var in range(x_min, size_of_net)]) #The maximum degree fo an undirected simple graph is N-1 where N is size_of_net.
+	for i in range(x_min, size_of_net):
+		for j in range(int(round(norm_const*i**(-power_law_exponent)))):
+			degree_sequence.append(i)

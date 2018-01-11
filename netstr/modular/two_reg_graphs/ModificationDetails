@@ -1,0 +1,31 @@
+24/11/2014: Another error I found that may occur.
+
+iii) list index out of range: Self edge exists, for two reasons:
+	iii.1) if A-B and B-A
+	iii.2) if two edges are A-B and A-C
+
+SOLUTION:
+	sol for iii.1): Put another condition that H1_edge_ele_1 is not the same as H2_edge_ele_2, and also H1_edge_ele_2 is not the same as H2_edge_ele_1.
+		H1_edge_ele_1 != H2_edge_ele_2 and H1_edge_ele_2 != H2_edge_ele_1
+	sol for iii.2): Replace selected_H2_edge != selected_H1_edge with H1_edge_ele_1 != H2_edge_ele_1 and H1_edge_ele_2 != H2_edge_ele_2.
+		H1_edge_ele_1 != H2_edge_ele_1 and H1_edge_ele_2 != H2_edge_ele_2
+
+
+
+
+
+
+24/11/2014: Some points that I should be careful when making rewiring process. (from two_reg_edge_rewiring)
+
+i) index out of list: if the edge (H1_edge_ele_1, H2_edge_ele_1) already exists in the graph because H2_edge_ele_1 is one of the neighbours of H1_edge_ele_1, then H.add_edge(H1_edge_ele_1, H2_edge_ele_1) doenot add another edge, because H is not a multi-graph.
+ii) G1-1-G2-2 does not exist: if selected_H1_edge and selected_H2_edge are the same, then H.remove_edge(H1_edge_ele_1, H1_edge_ele_2) removes the edge that H.remove_edge(H2_edge_ele_1, H2_edge_ele_2) should remove. Therefore, such error occurs.
+
+
+SOLUTION:
+	sol for i): Put a condition for adding / removing edges, such that none of the elements of randomly chosen edges are neighbours to one another.
+		H1_edge_ele_1 not in H[H2_edge_ele_1] and H1_edge_ele_2 not in H[H2_edge_ele_2]:
+
+	sol for ii): selected_H1_edge is not the same as selected_H2_edge
+		selected_H2_edge != selected_H1_edge 
+	Final condition statement:
+		if selected_H2_edge != selected_H1_edge and H1_edge_ele_1 not in H[H2_edge_ele_1] and H1_edge_ele_2 not in H[H2_edge_ele_2]:

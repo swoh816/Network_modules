@@ -1,0 +1,3 @@
+05/08/2015: (from Kristina Lerman's paper 'The majority illusion in social networks')
+...
+We can use Newman's edge rewiring procedure to change a network's assortativity without changing its degree distribution p(k). The rewiring procedure randomly chooses two pairs of connected nodes and swaps their edges if doing so changes their degree correlation. This can be repeated until desired assortativity is achieved.

@@ -1,0 +1,16 @@
+Nodes with the similar threshold form edges with higher probability.
+This is to mimic the IMPORTANCE OF NODAL ATTRIBUTE in human relationship.
+
+Or like an adaptive network, where edges keep changing, initially start with erdos renyi network (random edge formation which mimics initial meeting between many people), and then develops into a homophilous network by rewiring edges based on similar threshold.
+
+
+
+THE DIFFERENCE BETWEEN WITH BOGUNA'S MODEL
+
+in boguna's model, you can artificially give a degree of homophily $\alpha$.
+however, in our model, 
+
+(i) COMMUNITY DETECTION ALGORITHM is conducted at every time steps, and
+(ii) An algorithm quantifying the degree of homophily is run for each communities, and decides each community's $\alpha$.
+
+I wish this could make a network model to have (i) homophily, and (ii) high clustering coefficient NATURALLY.

@@ -1,0 +1,15 @@
+import random
+
+def init_up_frac(G, rho):
+	for i in G.nodes():
+		G.node[i] = 0
+
+	r = rd.randint(0,len(G)-1)
+	for i in range(int(rho*(len(G)))):
+		G.node[r] = 1
+		r = rd.randint(0,len(G)-1)
+		while G.node[r] == 1:
+			r = rd.randint(0,len(G)-1)
+			if G.node[r] == 0:
+				break
+

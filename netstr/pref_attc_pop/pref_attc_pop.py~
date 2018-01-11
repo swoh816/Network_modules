@@ -1,0 +1,2 @@
+# Basically preferential attachment model, but it has 'popularity' factor A.
+# => p_k ~ A*k_i/sum(ki)

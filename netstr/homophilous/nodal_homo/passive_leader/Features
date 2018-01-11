@@ -1,0 +1,3 @@
+(from my transfer report)
+
+Random graph with shuffling process. A randomly chosen node $i$ in the graph scans other nodes $j$ until it finds a node that minimizes $z_i-z_j$. It is a structural annealing process. threshold annealing => PASSIVE LEADER (MEDIATOR RECOMMENDED BY SURROUNDING PEOPLE)

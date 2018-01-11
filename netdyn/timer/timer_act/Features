@@ -1,0 +1,1 @@
+Spread the timer seed, which start ticking since a node meets its update condition. After timer reaches 0, the node will either get activated or deactivated.

@@ -1,0 +1,12 @@
+1. A node is randomly given an attribute X
+2. A node is given a probability which is a function of difference of X [p(dX)]. p(dX) will be either power-law, or any decreasing function, which reflects that human tends to bond with those who have similar attribute.
+3. You have two control parameters, (i) the standard deviation of X, and (ii) the standard deviation of the probability distribution p(dX).
+4. There exists a dynamical process, which is like a threshold-update model. So, nodes change their attribute, through interaction with other nodes.
+5. Observe (i) what kind of nodes (node with what standard deviation) become the center of all connection, and
+(ii) degree of homophily
+(iii) clustering coefficient.
+
+
+
+in real world representation:
+X means personal attribute (environmental, genetic condition), and p(X) means how flexible an individual is (individual action).

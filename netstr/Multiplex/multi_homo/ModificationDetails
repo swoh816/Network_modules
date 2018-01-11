@@ -1,0 +1,29 @@
+NEM (network evolution model) + Homophily
+
+1. Link deletion
+ delete edges that links different state nodes (1-0, 0-1).
+
+2. Rewiring
+ rewire edges such a way that connects nodes with the same state (1-1, 0-0).
+
+
+
+
+
+
+
+
+Mixture of baseline homophily / inbreeding homophily
+: baseline homophily: state homophily
+  inbreeding homophily: threshold homophily
+
+Or, add 'geographical coordination' as a default, and add threshold attribute / state attribute. Geographical attribute doesn't change, and state attribute changes by cascade, and threshold update changes by averaging process. Then,
+
+1. communty by similar threshold values will emerge initially
+
+edge probability between nodes with the same state increases, if they're within the radius of influence. then,
+
+2.1. subcommunities of the same state will emerge.
+2.2. subcommunity of state-1 nodes will emerge, and be separate from original commmunity, and merge with state-1 community from distant state-1 subcommunities.
+
+=> still, HOW TO SET EDGE PROBABILITY BETWEEN SAME STATE NODES IS UNCLEAR.

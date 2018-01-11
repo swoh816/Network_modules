@@ -1,0 +1,142 @@
+import networkx as nx
+import numpy as np
+import matplotlib.pyplot as plt
+import random as rd
+
+########## import graph file to test ##########
+import homophilous.nodal_homo.boguna_model.boguna_model as boguna_model
+
+########## Graph parameters ##########
+
+n = 250
+z = 10
+homo_fact = 3.5
+
+mean = 0.5
+std = 0.5
+
+node_Phi = []
+for i in range(n):
+	node_Phi.append(rd.random())
+
+#node_Phi = []
+#for i in range(n):
+#	node_Phi.append(rd.gauss(mean, std))
+
+
+G = boguna_model.homo_str(z, homo_fact, node_Phi)
+
+########## graph properties ##########
+
+#for i in range(n):
+#	for j in range(i, n): #permutation
+#		if p*inverse_differences[i][j]/avg_inverse_differences > rd.random():
+#			G.add_edge(i, j)
+
+#print sum(G.degree().values())/2
+print 'number of edges: ' + str(G.number_of_edges())
+print 'global clustering coefficient: ' + str(sum(nx.clustering(G).values()))
+
+#G = nx.connected_component_subgraphs(G)[0]
+
+
+
+
+########## Draw graph ##########
+
+pos = nx.spring_layout(G)
+#~ G = nx.connected_component_subgraphs(G)[0]
+
+plt.figure(figsize=(8,8))
+nx.draw_networkx_edges(G,pos,alpha=0.4)
+nx.draw_networkx_nodes(G,pos, node_color=node_Phi, cmap=plt.cm.Greens_r)
+# cmap=plt.cm.Reds_r, vmin = 0.1, vmax = 0.2)
+
+#~ nx.draw_networkx_labels(G, pos)
+
+plt.title('Graph')
+plt.colorbar()
+plt.xlim(-0.05,1.05)
+plt.ylim(-0.05,1.05)
+plt.axis('off')
+#~ plt.savefig('Threshold_map4.png')
+plt.show()
+
+
+
+
+
+
+
+########## Lineplots ##########
+
+
+
+
+
+
+
+
+
+
+
+####### Draw Giant component ######
+
+#Gcc = nx.connected_component_subgraphs(G)
+
+#pos = nx.spring_layout(Gcc)
+#plt.figure(figsize=(8,8))
+#nx.draw_networkx_edges(G,pos,alpha=0.4)
+#nx.draw_networkx_nodes(G,pos,
+#		       node_color=node_Phi,
+#		       cmap=plt.cm.Reds_r)
+#plt.title('Giant component')
+#plt.colorbar()
+#plt.xlim(-0.05,1.05)
+#plt.ylim(-0.05,1.05)
+##plt.axis('off')
+##plt.savefig('Figures2/' + file_name + '-Threshold2' + '-' + str(T) + '.png')
+#plt.show()
+
+
+
+########## draw histogram ##########
+#~ plt.figure()
+#~ y = node_Phi
+#~ hist, bins = np.histogram(y, bins = 50)
+#~ width = 0.7*(bins[1]-bins[0])
+#~ center = (bins[:-1] + bins[1:])/2
+#~ plt.xlabel('Threshold size')
+#~ plt.ylabel('Frequency')
+#~ plt.bar(center, hist, align = 'center', width = width)
+#~ plt.show()
+#~ plt.savefig('thr_hist_after.pdf')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#~ p=nx.single_source_shortest_path_length(G,ncenter)
+#~ 
+#~ plt.figure(figsize=(8,8))
+#~ nx.draw_networkx_edges(G,pos,nodelist=[ncenter],alpha=0.4)
+#~ nx.draw_networkx_nodes(G,pos,nodelist=p.keys(),
+                       #~ node_size=80,
+                       #~ node_color=p.values(),
+                       #~ cmap=plt.cm.Reds_r)
+#~ 
+#~ plt.xlim(-0.05,1.05)
+#~ plt.ylim(-0.05,1.05)
+#~ plt.axis('off')
+#~ plt.savefig('random_geometric_graph.png')
+#~ plt.show()
+

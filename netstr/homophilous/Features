@@ -1,0 +1,4 @@
+Nodes with the SIMILAR NODAL ATTRIBUTE form edges with higher probability.
+This is to mimic the IMPORTANCE OF NODAL ATTRIBUTE in human relationship.
+
+Or like an adaptive network, where edges keep changing, initially start with erdos renyi network (random edge formation which mimics initial meeting between many people), and then develops into a homophilous network by rewiring edges based on similar threshold.

@@ -1,0 +1,20 @@
+Nodes with the similar threshold form edges with higher probability.
+This is to mimic the IMPORTANCE OF NODAL ATTRIBUTE in human relationship.
+
+Or like an adaptive network, where edges keep changing, initially start with erdos renyi network (random edge formation which mimics initial meeting between many people), and then develops into a homophilous network by rewiring edges based on similar threshold.
+
+
+
+Basic assumption: EVERYONE HAS DIFFERENT PERSONALITY.
+
+THE DIFFERENCE WITH BOGUNA'S MODEL:
+
+in boguna's model, you can artificially give a degree of homophily $\alpha$, and change the size of macro-scopic homophily (homophily of a whole network).
+however, in our model, homophily is different AS A WHOLE, and also AS SEPARATE SMALL GROUPS. In Boguna's model, we need two parameters: threshold distribution parameteres (mean, std of distribution) and $\alpha$, while in our model, we only need one parameter, which is about threshold distribution. (We don't need to control $\alpha$, as it's a parameter that is naturally determined by different threshold distribution parameter. Therefore, Clustering and Homophily appears 'naturally', than 'artificially controlling $\alpha$'. $\alpha$ is a function dependent on time t and degree distribution's mean and std.
+
+n order to do so, our model consists of two important mechanisms, which are:
+
+(i) COMMUNITY DETECTION ALGORITHM is conducted at every time steps, and
+(ii) An algorithm quantifying the degree of homophily is run for each communities, and decides each community's $\alpha$, at every time step.
+
+I wish this could make a network model to have (i) homophily, and (ii) high clustering coefficient NATURALLY.

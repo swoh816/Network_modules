@@ -1,0 +1,5 @@
+(I'm not sure why this folder is separate from netdyn/losing_influence, but i'm just writing my instant idea here.)
+
+Losing influence is that the influential nodes lose influence to other nodes, and the loss of interest means that the nodes who are contacted by influential nodes lose interest about what they learnt from influential nodes.
+
+in that sense, I think this is the same as netdyn/discount_rate or netdyn/timer/timer_lose_effect.

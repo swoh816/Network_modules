@@ -1,0 +1,83 @@
+#!/usr/bin/python -tt
+
+
+#Take Threshold Update part out
+def frac_thr(G, phi, MAX_Steps_to_cascade, NO_infected_nodes, m, neighbor_Phi, node_Phi, n, a):
+
+	total_neighbor_state = {} #state_total. Dictionary is faster than list. Thus, I use dictionary for total_neighbor_state.
+
+	for step in range(MAX_Steps_to_cascade):
+
+#				#Homophiliation before the update
+#				for i in G.nodes():
+#					neighbor_Phi[i] = [node_Phi[i]]
+#					for j in G[i].keys():
+#						neighbor_Phi[i].append(node_Phi[j])
+#				for i in G.nodes():
+#					node_Phi[i] = sum(neighbor_Phi[i])/(len(G[i])+1)
+
+
+		for i in G.nodes():
+			total_neighbor_state[i] = 0
+			for j in G[i].keys():
+				total_neighbor_state[i] = total_neighbor_state[i] + G.node[j]
+		for i in G.nodes():
+			if len(G[i])>0:
+				if float(total_neighbor_state[i])/float(len(G[i]))>node_Phi[i]:
+					G.node[i] = 1
+
+			else:
+				G.node[i] = G.node[i]
+
+
+		if sum(G.node.values()) == a:
+			break
+		a = sum(G.node.values())
+#		print a
+
+		NO_infected_nodes[m].append(sum(G.node.values()))
+#		print NO_infected_nodes
+
+
+
+#		#Homophiliation after the update -> defunctionalized because it's Sequential dynamics, not interactive dynamics.
+#		for i in G.nodes():
+#			neighbor_Phi[i] = [node_Phi[i]]
+#			for j in G[i].keys():
+#				neighbor_Phi[i].append(node_Phi[j])
+#		for i in G.nodes():
+#			node_Phi[i] = sum(neighbor_Phi[i])/(len(G[i])+1)
+
+
+
+def abs_thr(phi):
+	for step in range(MAX_Steps_to_cascade):
+		for i in G.nodes():
+			total_neighbor_state[i] = 0
+			for j in G[i].keys():
+				total_neighbor_state[i] = total_neighbor_state[i] + G.node[j]
+		for i in G.nodes():
+			if len(G[i])>0:
+				if total_neighbor_state[i]>node_Phi[i]:
+					G.node[i] = 1
+
+			else:
+				G.node[i] = G.node[i]
+
+		NO_infected_nodes[m].append(sum(G.node.values()))
+		if sum(G.node.values()) >= n:
+			break
+
+def main():
+	n=int(sys.argv[1])
+	p=float(sys.argv[2])
+	phi = float(sys.argv[3])
+	MAX
+G, phi, MAX_Steps_to_cascade, NO_infected_nodes, m, neighbor_Phi, node_Phi, n, a
+	G=nx.fast_gnp_random_graph(n, p)
+
+	nx.draw(G)
+	pl.show()
+
+if __name__ == '__main__':
+	main()

@@ -1,0 +1,10 @@
+Or like an adaptive network, where edges keep changing, initially start with erdos renyi network (random edge formation which mimics initial meeting between many people), and then develops into a homophilous network by rewiring edges based on similar time stamps.
+
+Unlike adaptive temporal network, temporal adaptive network is an 'adaptive network' that the rewiring process (dynamics of topology) happens like a temporal network.
+ex) In ecological system, the cycle of life of different insects vary. For example, cicada's life cycle is 7 years, while another insect 'A' that is enemy of cicada is 3 years, so that 3 and 7 are prime numbers. Therefore, if there lives two kinds of insects cicada and 'A' in the same forest, then there coexistence can be only observed every 21 years. Therefore, the insect network in such forest is 'adaptive' because the species of insects is different every year, so that cicada interacts with 'A' every 21 years while it interacts with, for example, ants every 7 years. And it is temporal network because they have different time stamps when they emerge in the forest (3 and 7).
+
+
+<adap_temp_net vs temp_adap_net>
+
+Adaptive temporal network is a temporal network that is adaptive. For example, a temporal network rewires their edges (adaptive) by their similarity in time stamp.
+Temporal adaptive network is a adaptive network that is temporal. For example, an adaptive network happens with temporal period (time stamp) => isn't it just a temporal network..?

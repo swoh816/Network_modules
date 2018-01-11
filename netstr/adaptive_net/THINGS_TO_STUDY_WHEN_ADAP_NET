@@ -1,0 +1,11 @@
+(from Thilo Gross' "Adaptive coevolutionary networks: a review")
+
+Things to check when study adaptive networks:
+i) robust topological self-organization
+ii) associated appearance of power laws
+iii) Detailed investigation on the relationship between dynamics & topology
+iv) relationship between local & global property
+
+
+Important parameters of adaptive networks:
+i) timescales of evolution of topology & state --- separate time scale? or happen at the same time?

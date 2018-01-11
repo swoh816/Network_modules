@@ -1,0 +1,6 @@
+People consider the importance of future exponentially less than current. ex) Now is the most important, tomorrow is less important, the day after tomorrow is even less important, ...
+
+I wonder if this can be related to my dosage decrease function (either netdyn/loss_of_interest or netdyn/losing_influence). If one consider the importance of time t=1 as 100 and time t=2 as 50, then the information he received at time t=1 remains in his cognition as much as 100 while it decreases to 50 at time t=2. make sense?
+
+http://en.wikipedia.org/wiki/Discount_rate
+http://en.wikipedia.org/wiki/Intertemporal_choice
